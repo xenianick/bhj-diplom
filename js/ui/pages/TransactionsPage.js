@@ -17,8 +17,8 @@ class TransactionsPage {
     };
   }
 
-  this.content = document.querySelector('.content');
-  this.title = document.querySelector('.content-title');
+  content = document.querySelector('.content');
+  title = document.querySelector('.content-title');
 
   listen(e) {
     this.page.removeAccount();
