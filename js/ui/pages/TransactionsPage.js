@@ -17,8 +17,15 @@ class TransactionsPage {
     };
   }
 
+  this.content = document.querySelector('.content');
+  this.title = document.querySelector('.content-title');
+
+  listen(e) {
+    this.page.removeAccount();
+  };
   
-  isRemoveAcountAdded = false
+  onRemove = {handleEvent: this.listen, page: this};
+
   /**
    * Отслеживает нажатие на кнопку удаления транзакции
    * и удаления самого счёта. Внутри обработчика пользуйтесь
@@ -27,10 +34,10 @@ class TransactionsPage {
    * */
   registerEvents() {
     const removeAccountBtn = document.querySelector('.remove-account');
-    if (!this.isRemoveAcountAdded) {
-      this.isRemoveAcountAdded = true;
-      removeAccountBtn.addEventListener('click', () => this.removeAccount());
-    }
+    removeAccountBtn.removeEventListener('click', this.onRemove);
+    if (this.title.innerText !== 'Название счёта') {
+      removeAccountBtn.addEventListener('click', this.onRemove);
+    };
     const removeTransactionBtns = Array.from(document.querySelectorAll('.transaction__remove'));
     removeTransactionBtns.forEach(item => item.addEventListener('click', () => {
       const transactionId = item.getAttribute('data-id');
@@ -47,21 +54,27 @@ class TransactionsPage {
   render(options) {
     if (!options) {
       return
-    }
+    };
     const user = User.current();
     Account.get(options.account_id, user, (err, response) => {
-      if (response.success) {
-        const title = response.data.filter(item => item.id === options.account_id)
+      if (err) {
+        console.log(err);
+      };
+      if (!err && response.success) {
+        const title = response.data.filter(item => item.id === options.account_id);
         if (title.length !== 0) {
           this.renderTitle(title[0].name);
-        }
-      }
+        };
+      };
       Transaction.list(options, (err, response) => {
-        if (response.success) {
+        if (err) {
+          console.log(err);
+        };
+        if (!err && response.success) {
           this.renderTransactions(response.data);
           this.registerEvents();
-        }
-      })
+        };
+      });
     });
   }
 
@@ -75,15 +88,17 @@ class TransactionsPage {
    * */
   removeAccount() {
     const user = User.current();
-    let tr = this
     if (confirm('Вы действительно хотите удалить счёт?')) {
       Account.remove(App.lastOption.account_id, {email: user.email}, (err, response) => {
-        if (response.success) {
-          tr.clear();
+        if (err) {
+          console.log(err);
+        };
+        if (!err && response.success) {
+          this.clear();
           App.update();
-        }
-      })
-    }
+        };
+      });
+    };
   }
 
   /**
@@ -95,18 +110,21 @@ class TransactionsPage {
     const user = User.current()
     if (confirm('Вы действительно хотите удалить эту транзакцию?')) {
       Transaction.remove(id, {email: user.email}, (err, response) => {
-        if (response.success) {
+        if (err) {
+          console.log(err);
+        };
+        if (!err && response.success) {
           App.update();
-        }
-      })
-    }
+        };
+      });
+    };
   }
 
   /**
    * Вызывает метод render для отрисовки страницы
    * */
   update() {
-    this.render(App.lastOption)
+    this.render(App.lastOption);
   }
 
   /**
@@ -115,18 +133,15 @@ class TransactionsPage {
    * Устанавливает заголовок: «Название счёта»
    * */
   clear() {
-    const content = document.querySelector('.content');
-    content.innerHTML = '';
+    this.content.innerHTML = '';
     this.renderTitle('Название счёта');
-
   }
 
   /**
    * Устанавливает заголовок в элемент .content-title
    * */
   renderTitle( name ) {
-    const title = document.querySelector('.content-title');
-    title.innerText = `${name}`;
+    this.title.innerText = `${name}`;
   }
 
   /**
@@ -135,18 +150,16 @@ class TransactionsPage {
    * */
   formatDate( date ) {
     const year = date.substring(0, 4);
-    let month = date.substring(5, 7);
+    let month = parseInt(date.substring(5, 7));
     const day = date.substring(8, 10);
-    const hour = date.substring(11, 13);
-    const min = date.substring(14, 16);
+    const hoursAndMinutes = date.substring(11, 16);
     const monthesRus = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-    month = parseInt(month);
     monthesRus.forEach((item, i) => {
       if (i === (month - 1)) {
-        month = monthesRus[i];
+        month = monthesRus[i].toString();
       }
     });
-    return `${day} ${month} ${year} г. в ${hour}:${min}`;
+    return `${day} ${month} ${year} г. в ${hoursAndMinutes}`;
   }
 
   /**
@@ -185,8 +198,7 @@ class TransactionsPage {
    * используя getTransactionHTML
    * */
   renderTransactions( data ) {
-    const content = document.querySelector('.content');
-    content.innerHTML = '';
-    data.forEach(item => content.innerHTML += this.getTransactionHTML(item));
+    this.content.innerHTML = '';
+    data.forEach(item => this.content.innerHTML += this.getTransactionHTML(item));
   }
 }

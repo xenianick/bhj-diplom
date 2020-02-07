@@ -9,8 +9,8 @@ class CreateTransactionForm extends AsyncForm {
    * метод renderAccountsList
    * */
   constructor( element ) {
-    super(element)
-    this.renderAccountsList()
+    super(element);
+    this.renderAccountsList();
   }
 
   /**
@@ -21,7 +21,10 @@ class CreateTransactionForm extends AsyncForm {
     if (User.current()) {
       const authUser = User.current();
       Account.list(authUser, (err, response) => {
-        if (response.success) {
+        if (err) {
+          console.log(err);
+        };
+        if (!err && response.success) {
           const expenseAccountsList = document.getElementById('expense-accounts-list');
           const incomeAccountsList = document.getElementById('income-accounts-list');
           expenseAccountsList.innerHTML = '';
@@ -30,10 +33,10 @@ class CreateTransactionForm extends AsyncForm {
             const listItemHtml = `<option value="${item.id}">${item.name}</option>`;
             expenseAccountsList.innerHTML += listItemHtml;
             incomeAccountsList.innerHTML += listItemHtml;
-          })
-        }
-      })
-    }
+          });
+        };
+      });
+    };
   }
 
   /**
@@ -45,23 +48,27 @@ class CreateTransactionForm extends AsyncForm {
   onSubmit( options ) {
     if (options.type === 'income') {
       Transaction.create(options, (err, response) => {
-        if (response.success) {
+        if (err) {
+          console.log(err);
+        };
+        if (!err && response.success) {
           App.getModal('newIncome').close();
-          const form = document.getElementById('new-income-form');
-          form.reset();
+          document.getElementById('new-income-form').reset();
           App.update();
-        }
-      })
-    }
+        };
+      });
+    };
     if (options.type === 'expense') {
       Transaction.create(options, (err, response) => {
-        if (response.success) {
+        if (err) {
+          console.log(err);
+        };
+        if (!err && response.success) {
           App.getModal('newExpense').close();
-          const form = document.getElementById('new-expense-form');
-          form.reset();
+          document.getElementById('new-expense-form').reset();
           App.update();
-        }
-      })
-    }
+        };
+      });
+    };
   }
 }  

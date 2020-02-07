@@ -26,7 +26,7 @@ class AsyncForm {
    * */
   registerEvents() {
     this.element.addEventListener('submit', (e) => {
-      this.submit()
+      this.submit();
       e.preventDefault();
     });
   }
@@ -58,8 +58,6 @@ class AsyncForm {
    * */
   submit() {
     const data = this.getData();
-    // const url = this.element.getAttribute('action');
-    // const method = this.element.getAttribute('method');
     this.onSubmit(data);
   }
 }

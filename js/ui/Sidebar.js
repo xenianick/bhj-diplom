@@ -24,7 +24,7 @@ class Sidebar {
       elemBody.classList.toggle('sidebar-open');
       elemBody.classList.toggle('sidebar-collapse');
       e.preventDefault();
-    })
+    });
   }
 
   /**
@@ -36,23 +36,20 @@ class Sidebar {
    * */
   static initAuthLinks() {
     const loginBtn = document.querySelector('.menu-item_login > a');
-    loginBtn.addEventListener('click', (e) => {
-      App.getModal('login').open()
-      e.preventDefault();
-    });
+    loginBtn.addEventListener('click', (e) => App.getModal('login').open());
     const registerBtn = document.querySelector('.menu-item_register > a');
-    registerBtn.addEventListener('click', (e) => {
-      App.getModal('register').open()
-      e.preventDefault();
-    });
+    registerBtn.addEventListener('click', (e) => App.getModal('register').open());
     const logoutBtn = document.querySelector('.menu-item_logout > a');
     logoutBtn.addEventListener('click', (e) => {
-      User.logout(User.current(), (response) => {
-        if (response.success === true) {
+      const user = User.current();
+      User.logout(user, (err, response) => {
+        if (err) {
+          console.log(err);
+        };
+        if (!err && response.success) {
           App.setState('init');
         };
       });
-      e.preventDefault();
     });
   }
 

@@ -43,11 +43,11 @@ class User {
    * */
   static fetch( data, callback = f => f ) {
     const request = createRequest({url: `${this.HOST}${this.URL}/current`, data: data, responseType: 'json', method: 'GET', callback: ((err, response) => {
-        if (response.success === true) {
+        if (response.success) {
           User.setCurrent(response.user);
         };
         if (response.success === false) {
-          // User.unsetCurrent();
+          User.unsetCurrent();
         };
         callback();
       })
@@ -63,13 +63,13 @@ class User {
    * */
   static register( data, callback = f => f ) {
     const request = createRequest({url: `${this.HOST}${this.URL}/register`, data: data, responseType: 'json', method: 'POST', callback: (err, response) => {
-          if (request.response.success === true) {
+          if (request.response.success) {
             User.setCurrent(response.user);
           };
           if (request.response.success === false) {
             alert(response.error)
           };
-          callback(response);
+          callback(err, response);
         }
       });
     return request;
@@ -83,12 +83,12 @@ class User {
    * */
   static login( data, callback = f => f ) {
     const request = createRequest({url: `${this.HOST}${this.URL}/login`, data: data, responseType: 'json', method: 'POST', callback: (err, response) => {
-        if (response.success === true) {
+        if (response.success) {
           User.setCurrent(response.user);
         };
         if (response.success === false) {
         };
-        callback(response);
+        callback(err, response);
       }
     });
     return request;
@@ -100,10 +100,10 @@ class User {
    * */
   static logout( data, callback = f => f ) {
     const request = createRequest({url: `${this.HOST}${this.URL}/logout`, data: data, responseType: 'json', method: 'POST', callback: (err, response) => {
-        if (response.success === true) {
+        if (response.success) {
           User.unsetCurrent();
         };
-        callback(response);
+        callback(err, response);
       }
     });
     return request;

@@ -3,7 +3,8 @@
  * на сервер.
  * */
 const createRequest = (options = {}) => {
-    const xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
+  try {
     if (options.hasOwnProperty('data') && options.method === 'GET') {
       let url = `${options.url}?`;
       for (let key in options.data) {
@@ -27,18 +28,21 @@ const createRequest = (options = {}) => {
         if (xhr.response.success) {
           options.callback(null, xhr.response);
         } else {
-          options.callback(null, xhr.response);
-        }
+          options.callback(xhr.response, null);
+        };
       };
     });
     if (options.hasOwnProperty('data') && options.method !== 'GET') {
       const formData = new FormData();
       for (let key in options.data) {
         formData.append(key, options.data[key]);
-      }
+      };
       xhr.send(formData);
     } else {
       xhr.send();
     };
     return xhr;
+  } catch (e) {
+    alert(e);
+  };
 };

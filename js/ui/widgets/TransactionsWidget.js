@@ -15,7 +15,7 @@ class TransactionsWidget {
     if (!this.element) {
       alert('Ошибочка!');
     };
-    this.registerEvents()
+    this.registerEvents();
   }
   /**
    * Регистрирует обработчики нажатия на
@@ -28,9 +28,9 @@ class TransactionsWidget {
     const expenseBtn = document.querySelector('.create-expense-button');
     incomeBtn.addEventListener('click', (e) => {
       App.getModal('newIncome').open();
-    })
+    });
     expenseBtn.addEventListener('click', (e) => {
       App.getModal('newExpense').open();
-    })
+    });
   }
 }

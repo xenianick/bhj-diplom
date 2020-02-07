@@ -45,10 +45,6 @@ class Modal {
    * Удаляет обработчики событий
    * */
   unregisterEvents() {
-    const closeElements = Array.from(this.element.querySelectorAll('[data-dismiss=modal]'));
-    closeElements.forEach(item => {
-      item.removeEventListener('click', e => this.onClose(e))
-    });
   }
   /**
    * Открывает окно: устанавливает CSS-свойство display

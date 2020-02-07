@@ -12,7 +12,6 @@ class UserWidget {
    * */
   constructor( element ) {
     this.element = element;
-
     if (!this.element) {
       alert('Ошибочка!');
     };

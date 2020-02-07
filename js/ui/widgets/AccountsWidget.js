@@ -18,7 +18,6 @@ class AccountsWidget {
       alert('Ошибочка!');
     };
     this.update();
-    
   }
 
   /**
@@ -53,14 +52,16 @@ class AccountsWidget {
     if (User.current()) {
       const authUser = User.current();
       Account.list(authUser, (err, response) => {
-        if (response.success) {
+        if (err) {
+          console.log(err);
+        };
+        if (!err && response.success) {
           this.clear();
-          console.log(response)
           response.data.forEach(item => this.renderItem(item));
           this.registerEvents(); 
-        }
-      })
-    }
+        };
+      });
+    };
   }
 
   /**
